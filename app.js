@@ -4,8 +4,13 @@ const questionRouter = require("./routes/questionRoutes");
 const cors = require("cors");
 const bodyParser = require("body-parser");
 const Urls = require("./settings/staticUrls");
-const Test = require("./models/Tests")
-const {Sequelize} = require('sequelize');
+const Sequelize = require('sequelize');
+const sequelize = new Sequelize({
+  dialect: 'sqlite',
+  storage: './data/quizzerdb.db'
+});
+const Test  = require("./models/Tests")(sequelize, Sequelize.DataTypes);
+const container = require("./containerConfig");
 
 //TODO: dependency inject sequelize instance into this using awilix
 
@@ -17,10 +22,17 @@ app.listen(Urls.serverPort, () =>
   )
 );
 
+
 app.post('/createtest', async (req, res) => {
-  await Sequelize.models.Test.build(req.body);
-  res.send('test created');
+  try {
+    await Test.create(req.body);
+    res.send('test created');
+    
+  } catch (error) {
+    console.log(error);
+  }
 });
 
 
 app.use("/api/Questions", questionRouter);
+
