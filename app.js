@@ -12,7 +12,6 @@ const sequelize = new Sequelize({
 const Test  = require("./models/Tests")(sequelize, Sequelize.DataTypes);
 const container = require("./containerConfig");
 
-//TODO: dependency inject sequelize instance into this using awilix
 
 app.use(cors());
 app.use(bodyParser.json());
